@@ -1,0 +1,77 @@
+<div class="relative min-h-screen flex items-center justify-center bg-cover bg-center" style="background-image: url('/ruta/de/tu/imagen.jpg');">
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    <div class="relative bg-white bg-opacity-20 backdrop-blur-md p-8 rounded-lg shadow-lg w-full max-w-md">
+      <div class="flex justify-center mb-4">
+        <img src="/ruta/de/tu/logo.png" alt="Logo" class="h-12">
+      </div>
+  
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Campo de correo electrónico -->
+        <div class="mb-4">
+          <label for="email" class="block text-white text-sm font-bold mb-2">Correo Electrónico</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="Ingresa tu correo"
+            autocomplete="off"
+            class="w-full px-3 py-2 border rounded-lg bg-white bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
+          <!-- Mensaje de error para el correo electrónico -->
+          <div *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched" class="text-red-600 mt-2">
+            <span *ngIf="loginForm.controls['email'].errors?.['required']">El correo es obligatorio.</span>
+          </div>
+        </div>
+  
+        <!-- Campo de contraseña -->
+        <div class="mb-6">
+          <label for="password" class="block text-white text-sm font-bold mb-2">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="Ingresa tu contraseña"
+            autocomplete="off"
+            class="w-full px-3 py-2 border rounded-lg bg-white bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          />
+          <!-- Mensaje de error para la contraseña -->
+          <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched" class="text-red-600 mt-2">
+            <span *ngIf="loginForm.controls['password'].errors?.['required']">La contraseña es obligatoria.</span>
+            <span *ngIf="loginForm.controls['password'].errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</span>
+          </div>
+        </div>
+  
+        <!-- Enlace de "¿Olvidaste tu contraseña?" -->
+        <div class="text-right mb-4">
+          <a href="#" class="text-white text-sm hover:underline">¿Has olvidado tu contraseña?</a>
+        </div>
+  
+        <!-- Botón de "Iniciar Sesión" -->
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid"
+          class="w-full bg-cyan-500 text-white py-2 px-4 rounded-lg hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:bg-cyan-300"
+        >
+          Iniciar Sesión
+        </button>
+  
+        <!-- Mensaje de error general -->
+        <div *ngIf="errorMessage" class="mt-4 text-center text-red-500">
+          {{ errorMessage }}
+        </div>
+  
+        <!-- Enlace de "Regístrate" -->
+        <p class="mt-4 text-center text-white">
+          ¿No tienes una cuenta?
+          <a href="#" class="text-cyan-300 hover:underline">Regístrate</a>
+        </p>
+      </form>
+  
+      <!-- Spinner -->
+      <div id="spinner" class="hidden mt-4 text-center">
+        <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
+          <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Cargando...</span>
+        </div>
+      </div>
+    </div>
+  </div>
