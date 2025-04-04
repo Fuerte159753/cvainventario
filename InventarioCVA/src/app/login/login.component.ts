@@ -14,15 +14,18 @@ import { NgIf } from '@angular/common';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: string | null = null;
+  spinner: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {    this.loginForm = this.fb.group({
-    email: ['', [Validators.required]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-  });}
+  ) { 
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+  }
 
   ngOnInit(): void {
   }
@@ -32,30 +35,25 @@ export class LoginComponent implements OnInit {
       this.errorMessage = 'Por favor, completa el formulario correctamente.';
       return;
     }
-
+  
     this.errorMessage = null;
-    this.mostrarSpinner(true);
-
-    const { email, password } = this.loginForm.value;
-
-    this.authService.login(email, password).subscribe(
-      (response) => {
-        this.mostrarSpinner(false);
-        //console.log('Login exitoso', response);
-        this.router.navigate(['/Welcome']);
-      },
-      (error) => {
-        this.mostrarSpinner(false);
-        console.error('Error en el login', error);
-        this.errorMessage = 'Credenciales incorrectas. Inténtalo de nuevo.';
-      }
-    );
-  }
-
-  mostrarSpinner(visible: boolean) {
-    const spinner = document.getElementById('spinner');
-    if (spinner) {
-      spinner.classList.toggle('hidden', !visible);
-    }
+    this.spinner = true;
+      const { email, password } = this.loginForm.value;
+      this.authService.login(email, password).subscribe(
+        (response) => {
+          setTimeout(() => {
+          console.log('Respuesta del servidor:', response);
+          this.router.navigate(['/Welcome']);
+          this.spinner = false;
+        }, 1000);
+        },
+        (error) => {
+          setTimeout(() => {
+            console.error('Error completo:', error);
+            this.errorMessage = error.error?.message || 'Error al ingresar. Inténtalo de nuevo.';
+            this.spinner = false;
+          }, 500);
+        }
+      );
   }
 }

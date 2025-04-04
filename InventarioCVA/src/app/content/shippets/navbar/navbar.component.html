@@ -1,0 +1,58 @@
+<nav class="bg-white shadow-md">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo con icono de persona -->
+        <div class="flex-shrink-0">
+          <a routerLink="Perfil" class="flex items-center">
+            <i class="bi bi-person text-2xl text-gray-700"></i>
+          </a>
+        </div>
+  
+        <!-- Botón de hamburguesa a la derecha -->
+        <div class="md:hidden order-2">
+          <button
+            type="button"
+            class="text-gray-800 hover:text-blue-600 focus:outline-none transition-colors duration-200"
+            (click)="toggleMenu()"
+          >
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" [ngClass]="{ 'hidden': isMenuOpen, 'block': !isMenuOpen }">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+            </svg>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" [ngClass]="{ 'block': isMenuOpen, 'hidden': !isMenuOpen }">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+  
+        <!-- Menú para pantallas grandes -->
+        <div class="hidden md:flex md:items-center md:space-x-6">
+          <a routerLink="Inicio" class="text-gray-800 hover:text-blue-600 transition-colors duration-200">Inicio</a>
+          <a routerLink="Productos" class="text-gray-800 hover:text-blue-600 transition-colors duration-200">Daños o Reparaciones</a>
+          <a routerLink="Existencia" class="text-gray-800 hover:text-blue-600 transition-colors duration-200"> existencias</a>
+          <a routerLink="Clientes" class="text-gray-800 hover:text-blue-600 transition-colors duration-200"> clientes</a>
+          <a routerLink="Proveedores" class="text-gray-800 hover:text-blue-600 transition-colors duration-200">Proveedores</a>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Menú para móviles con animación y efecto de scroll -->
+    <div 
+    class="md:hidden fixed top-16 left-0 w-full bg-white shadow-lg z-50 transition-all duration-300 ease-in-out overflow-hidden"
+    [ngClass]="{ 'max-h-[500px] opacity-100 visible' : isMenuOpen, 'max-h-0 opacity-0 invisible' : !isMenuOpen }">
+    
+    <div class="px-4 pt-4 pb-6 space-y-2 overflow-y-auto max-h-[400px]">
+        <a (click)="toggleMenu()" routerLink="Inicio" class="block px-3 py-2 text-gray-800 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors duration-200">
+          <i class="bi bi-house"></i> Inicio
+        </a>
+        <a (click)="toggleMenu()" routerLink="Productos" class="block px-3 py-2 text-gray-800 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors duration-200">
+        <i class="bi bi-list-check"></i> Daños o Reparaciones
+        </a>
+        <a (click)="toggleMenu()" routerLink="Existencia" class="block px-3 py-2 text-gray-800 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors duration-200">
+        <i class="bi bi-clipboard-check"></i> Gestion de existencias
+        </a>
+        <a (click)="toggleMenu()" routerLink="Clientes" class="block px-3 py-2 text-gray-800 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors duration-200">
+        <i class="bi bi-person-badge"></i> Gestion de clientes
+        </a>
+    </div>
+    </div>
+  </nav>

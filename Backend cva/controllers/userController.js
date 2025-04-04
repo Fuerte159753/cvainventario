@@ -55,20 +55,20 @@ exports.deleteUser = (req, res) => {
   });
 };
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
     const { user, password } = req.body;
-    // Busca el usuario en la base de datos
-    db.query(
-      'SELECT * FROM usuarios WHERE user = ? AND password = ?',
-      [user, password],
-      (err, results) => {
-        if (err) {
-          return res.status(500).json({ error: err.message , hola: 'puta madreeee'});
-        }
+    try {
+        // Ejecuta la consulta SQL con el pool
+        const [results] = await db.query('SELECT * FROM usuarios WHERE user = ? AND password = ?', [user, password]);
         if (results.length === 0) {
-          return res.status(401).json({ message: 'Credenciales incorrectas' });
+             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
-        res.json({ message: 'Login exitoso', user: results[0] });
-      }
-    );
+
+        res.json({
+            success: true,
+            message: 'Login exitoso',
+        });
+    } catch (err) {
+        return res.status(500).json({ error: 'Error interno del servidor' });
+    }
 };

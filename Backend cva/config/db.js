@@ -1,16 +1,15 @@
-const mysql = require('mysql2');
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'cva' 
-});
+const mysql = require('mysql2/promise');
 
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL:', err);
-    return;
-  }
-  console.log('Connected to MySQL database');
+const pool = mysql.createPool({
+  host: 'sql311.byethost32.com',
+  user: 'b32_38669081',
+  password: '12345678',
+  database: 'b32_38669081_cva',
+  port: 3306, // Añade esto explícitamente
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  connectTimeout: 10000 // Aumenta timeout a 10 segundos
 });
-module.exports = connection;
+console.log('se conecto a la base de datos');
+module.exports = pool;

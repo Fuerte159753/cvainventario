@@ -6,13 +6,83 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/users'; // URL de tu backend
+  private apiUrl = 'http://localhost:3000/api'; // URL de tu backend
+  private apiUrluserlog = 'http://localhost:3000/user';// URL para usuarios registrados
 
   constructor(private http: HttpClient) {}
-
-  // Método para realizar el login
   login(email: string, password: string): Observable<any> {
     const body = { user: email, password };
     return this.http.post(`${this.apiUrl}/login`, body);
   }
+  getNextFurnitureId(): Observable<{ nextId: number }> {
+    return this.http.get<{ nextId: number }>(`${this.apiUrluserlog}/nextId`);
+  }
+  addFurniture(furnitureData: {
+    type: string;
+    description: string;
+    evidences: Array<{
+      image: string; // base64
+      filename: string;
+      evidenceDescription: string;
+    }>;
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrluserlog}/addFurniture`, furnitureData);
+  }
+  getFurnitureWithImages(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrluserlog}/muebles`);
+  }
+
+  // En tu AuthService
+  createClient(clientData: any): Observable<any> {
+    return this.http.post(`${this.apiUrluserlog}/clients`, clientData);
+  }
+
+  getClients(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrluserlog}/clients`);
+  }
+
+  updateClient(id: number, clientData: any): Observable<any> {
+    return this.http.put(`${this.apiUrluserlog}/clients/${id}`, clientData);
+  }
+
+  deleteClient(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrluserlog}/clients/${id}`);
+  }
+
+  createProveedor(proveedorData: any): Observable<any> {
+    return this.http.post(`${this.apiUrluserlog}/proveedores`, proveedorData);
+  }
+
+  getProveedores(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrluserlog}/proveedores`);
+  }
+
+  updateProveedor(id: number, proveedorData: any): Observable<any> {
+    return this.http.put(`${this.apiUrluserlog}/proveedores/${id}`, proveedorData);
+  }
+
+  deleteProveedor(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrluserlog}/proveedores/${id}`);
+  }
+  // Métodos adicionales para productos en tu AuthService
+createProducto(productoData: any): Observable<any> {
+  return this.http.post(`${this.apiUrluserlog}/productos`, productoData);
+}
+
+getProductos(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrluserlog}/productos`);
+}
+
+getProducto(id: number): Observable<any> {
+  return this.http.get<any>(`${this.apiUrluserlog}/productos/${id}`);
+}
+
+updateProducto(id: number, productoData: any): Observable<any> {
+  return this.http.put(`${this.apiUrluserlog}/productos/${id}`, productoData);
+}
+
+deleteProducto(id: number): Observable<any> {
+  return this.http.delete(`${this.apiUrluserlog}/productos/${id}`);
+}
+
 }

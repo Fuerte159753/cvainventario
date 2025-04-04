@@ -1,0 +1,24 @@
+/* Transición suave para el acordeón */
+.accordion-content {
+    transition: max-height 0.3s ease-out, opacity 0.3s ease;
+  }
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+
+  /* products.component.css */
+.cursor-pointer {
+  transition: transform 0.2s;
+}
+
+.cursor-pointer:hover {
+  transform: scale(1.08);
+}
+
+.modal-image {
+  transition: opacity 0.3s;
+}
+
+.thumbnail:hover {
+  opacity: 0.8;
+}
