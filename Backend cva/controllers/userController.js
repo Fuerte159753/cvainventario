@@ -10,10 +10,12 @@ exports.login = async (req, res) => {
         if (results.length === 0) {
              return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
+        const usuario = results[0];
 
         res.json({
             success: true,
             message: 'Login exitoso',
+            id: usuario.id 
         });
     } catch (err) {
         return res.status(500).json({ error: 'Error interno del servidor' });
