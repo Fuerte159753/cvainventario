@@ -1,13 +1,30 @@
 const mysql = require('mysql2/promise');
 
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'cva' ,
+  host: 'sql5.freesqldatabase.com',
+  user: 'sql5771230',
+  password: 'VKPauF2xg7',
+  database: 'sql5771230',
+  port: 3306,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  connectTimeout: 10000
 });
-console.log('se conecto a la base de datos');
+
+// Validar conexión
+async function testConnection() {
+  try {
+    const connection = await pool.getConnection();
+    await connection.query('SELECT 1'); // Consulta de prueba
+    console.log('✅ Conexión a la base de datos establecida correctamente.');
+    connection.release();
+  } catch (error) {
+    console.error('❌ Error al conectar con la base de datos:', error.message);
+    process.exit(1); // Sale del proceso si falla la conexión
+  }
+}
+
+testConnection();
+
 module.exports = pool;
