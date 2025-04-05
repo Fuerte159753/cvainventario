@@ -54,21 +54,26 @@ exports.deleteUser = (req, res) => {
     res.json({ message: 'User deleted successfully' });
   });
 };
-
 exports.login = async (req, res) => {
-    const { user, password } = req.body;
-    try {
-        // Ejecuta la consulta SQL con el pool
-        const [results] = await db.query('SELECT * FROM usuarios WHERE user = ? AND password = ?', [user, password]);
-        if (results.length === 0) {
-             return res.status(401).json({ message: 'Credenciales incorrectas' });
-        }
+  const { user, password } = req.body;
+  try {
+      const [results] = await db.query(
+          'SELECT * FROM usuarios WHERE user = ? AND password = ?', 
+          [user, password]
+      );
 
-        res.json({
-            success: true,
-            message: 'Login exitoso',
-        });
-    } catch (err) {
-        return res.status(500).json({ error: 'Error interno del servidor' });
-    }
+      if (results.length === 0) {
+          return res.status(401).json({ message: 'Credenciales incorrectas' });
+      }
+
+      const usuario = results[0]; // Obtenemos el usuario encontrado
+
+      res.json({
+          success: true,
+          message: 'Login exitoso',
+          id: usuario.id // Aquí devolvemos el id del usuario
+      });
+  } catch (err) {
+      return res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };

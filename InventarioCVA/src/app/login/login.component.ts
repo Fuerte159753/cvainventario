@@ -42,7 +42,8 @@ export class LoginComponent implements OnInit {
       this.authService.login(email, password).subscribe(
         (response) => {
           setTimeout(() => {
-          console.log('Respuesta del servidor:', response);
+          //console.log('Respuesta del servidor:', response);
+          sessionStorage.setItem('userId', response.id.toString());
           this.router.navigate(['/Welcome']);
           this.spinner = false;
         }, 1000);

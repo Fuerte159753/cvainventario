@@ -6,8 +6,10 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api'; // URL de tu backend
-  private apiUrluserlog = 'http://localhost:3000/user';// URL para usuarios registrados
+  //private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = 'https://cvainventario.onrender.com/api';
+  //private apiUrluserlog = 'http://localhost:3000/user';
+  private apiUrluserlog = 'https://cvainventario.onrender.com/user';
 
   constructor(private http: HttpClient) {}
   login(email: string, password: string): Observable<any> {

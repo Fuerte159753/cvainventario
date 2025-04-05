@@ -3,9 +3,6 @@ const userlogcontroller = require ('../controllers/userLogController');
 const productoController = require('../controllers/productoController');
 
 const router = express.Router();
-// ESPACIO PARA LAS RUTAS
-
-// Configuración específica para esta ruta
 const jsonParser = express.json({ limit: '50mb' });
 
 router.post('/addFurniture', jsonParser, userlogcontroller.addMueble);
