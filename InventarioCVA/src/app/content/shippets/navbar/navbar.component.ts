@@ -2,6 +2,8 @@ import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { HostListener } from '@angular/core';
+import { Notyf } from 'notyf';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -13,6 +15,7 @@ import { HostListener } from '@angular/core';
 })
 export class NavbarComponent {
   isMenuOpen = false; 
+  constructor(private router: Router) {}
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -32,13 +35,10 @@ export class NavbarComponent {
       //this.isMenuOpen = false
     }
   }
-
-  // Función para cerrar sesión
-  logout() {
-    this.isMenuOpenuser = false;
-    // Aquí va tu lógica para cerrar sesión
-    console.log('Sesión cerrada');
-    // Ejemplo: this.authService.logout();
-    // this.router.navigate(['/login']);
+  private notyf = new Notyf();
+  logout(): void {
+    sessionStorage.removeItem('userId');
+    this.notyf.success('Sesión cerrada correctamente');
+    this.router.navigate(['/Login']);
   }
 }

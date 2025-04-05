@@ -8,11 +8,12 @@ import { ExistenciaComponent } from './content/existencia/existencia.component';
 import { ClientesComponent } from './content/clientes/clientes.component';
 import { ProveedoresComponent } from './content/proveedores/proveedores.component';
 import { PerfilComponent } from './content/perfil/perfil.component';
+import { authGuard } from './guard/guard.guard';
 
 export const routes: Routes = [
     {path: 'Login', component: LoginComponent},
     {path:'', redirectTo: 'Login', pathMatch: 'full'},
-    {path: 'Welcome', component: WelcomeComponent, children:[
+    {path: 'Welcome', component: WelcomeComponent, canActivate: [authGuard], children:[
         {path: 'Inicio', component: InicioComponent},
         {path: '', redirectTo: 'Inicio', pathMatch: 'full'},
         { path: 'Productos', component: ProductsComponent},
