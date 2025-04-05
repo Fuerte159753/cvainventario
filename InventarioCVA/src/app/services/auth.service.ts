@@ -87,4 +87,19 @@ deleteProducto(id: number): Observable<any> {
   return this.http.delete(`${this.apiUrluserlog}/productos/${id}`);
 }
 
+// profile
+getUserProfile(userId: string) {
+  return this.http.get(`${this.apiUrl}/profile/${userId}`);
+}
+
+updateProfile(userId: string, profileData: any) {
+  return this.http.put(`${this.apiUrl}/profile/${userId}`, profileData);
+}
+
+updatePassword(userId: string, currentPassword: string, newPassword: string) {
+  return this.http.put(`${this.apiUrl}/profile/${userId}/password`, {
+    currentPassword,
+    newPassword
+  });
+}
 }

@@ -13,7 +13,6 @@ import { AuthService } from '../../services/auth.service';
 export class PerfilComponent {
   profileForm: FormGroup;
   passwordForm: FormGroup;
-  userId: number = 0;
   loading = false;
   successMessage = '';
   errorMessage = '';
@@ -35,23 +34,75 @@ export class PerfilComponent {
   }
 
   ngOnInit(): void {
-    this.initForms();
     this.loadProfile();
   }
 
-  initForms(): void {
-
-  }
-
   passwordMatchValidator(form: FormGroup) {
+    return form.get('newPassword')?.value === form.get('confirmPassword')?.value 
+      ? null 
+      : { mismatch: true };
   }
 
   loadProfile(): void {
+    const userId = sessionStorage.getItem('userId');
+    if (!userId) return;
+
+    this.authService.getUserProfile(userId).subscribe({
+      next: (user: any) => {
+        this.profileForm.patchValue({
+          nombre: user.nombre,
+          user: user.user
+        });
+      },
+      error: (err) => {
+        this.errorMessage = 'Error al cargar el perfil';
+        console.error(err);
+      }
+    });
   }
 
   updateProfile(): void {
+    if (this.profileForm.invalid) return;
+
+    this.loading = true;
+    const userId = sessionStorage.getItem('userId');
+    if (!userId) return;
+
+    this.authService.updateProfile(userId, this.profileForm.value).subscribe({
+      next: (response) => {
+        this.successMessage = 'Perfil actualizado correctamente';
+        this.loading = false;
+        setTimeout(() => this.successMessage = '', 3000);
+      },
+      error: (err) => {
+        this.errorMessage = 'Error al actualizar el perfil';
+        this.loading = false;
+        console.error(err);
+      }
+    });
   }
 
   updatePassword(): void {
+    if (this.passwordForm.invalid) return;
+
+    this.loading = true;
+    const userId = sessionStorage.getItem('userId');
+    if (!userId) return;
+
+    const { currentPassword, newPassword } = this.passwordForm.value;
+
+    this.authService.updatePassword(userId, currentPassword, newPassword).subscribe({
+      next: (response) => {
+        this.successMessage = 'Contraseña actualizada correctamente';
+        this.passwordForm.reset();
+        this.loading = false;
+        setTimeout(() => this.successMessage = '', 3000);
+      },
+      error: (err) => {
+        this.errorMessage = err.error.message || 'Error al actualizar la contraseña';
+        this.loading = false;
+        console.error(err);
+      }
+    });
   }
 }

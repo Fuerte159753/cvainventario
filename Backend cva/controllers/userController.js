@@ -2,58 +2,6 @@
 const User = require('../models/userModel');
 const db = require('../config/db');
 
-exports.getAllUsers = (req, res) => {
-  User.getAll((err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(results);
-  });
-};
-
-exports.getUserById = (req, res) => {
-  const id = req.params.id;
-  User.getById(id, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    if (results.length === 0) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    res.json(results[0]);
-  });
-};
-
-exports.createUser = (req, res) => {
-  const newUser = req.body;
-  User.create(newUser, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.status(201).json({ id: results.insertId, ...newUser });
-  });
-};
-
-exports.updateUser = (req, res) => {
-  const id = req.params.id;
-  const updatedUser = req.body;
-  User.update(id, updatedUser, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json({ id, ...updatedUser });
-  });
-};
-
-exports.deleteUser = (req, res) => {
-  const id = req.params.id;
-  User.delete(id, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.json({ message: 'User deleted successfully' });
-  });
-};
 exports.login = async (req, res) => {
     const { user, password } = req.body;
     try {
@@ -70,4 +18,49 @@ exports.login = async (req, res) => {
     } catch (err) {
         return res.status(500).json({ error: 'Error interno del servidor' });
     }
+};
+
+exports.getUserProfile = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const [results] = await db.query('SELECT id, nombre, user FROM usuarios WHERE id = ?', [id]);
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+    res.json(results[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  const id = req.params.id;
+  const { nombre, user } = req.body;
+  
+  try {
+    await db.query('UPDATE usuarios SET nombre = ?, user = ? WHERE id = ?', [nombre, user, id]);
+    res.json({ success: true, message: 'Perfil actualizado correctamente' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.updatePassword = async (req, res) => {
+  const id = req.params.id;
+  const { currentPassword, newPassword } = req.body;
+  
+  try {
+    // Primero verificar la contraseña actual
+    const [user] = await db.query('SELECT * FROM usuarios WHERE id = ? AND password = ?', [id, currentPassword]);
+    
+    if (user.length === 0) {
+      return res.status(400).json({ message: 'Contraseña actual incorrecta' });
+    }
+    
+    // Actualizar contraseña
+    await db.query('UPDATE usuarios SET password = ? WHERE id = ?', [newPassword, id]);
+    res.json({ success: true, message: 'Contraseña actualizada correctamente' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
