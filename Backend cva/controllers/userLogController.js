@@ -112,7 +112,7 @@ module.exports.getMueblesConImagenes = async (req, res) => {
         
         // Obtener todos los muebles con sus imágenes relacionadas
         const [muebles] = await connection.query(`
-            SELECT m.id, m.tipomueble, m.descripcionprincipal, 
+            SELECT m.id, m.tipomueble, m.descripcionprincipal, m.created_at, 
                    r.imagen, r.descripcion as descripcion_evidencia
             FROM muebles m
             LEFT JOIN recursos r ON m.id = r.id_mueble
