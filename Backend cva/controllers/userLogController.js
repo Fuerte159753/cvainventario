@@ -134,6 +134,7 @@ module.exports.getMueblesConImagenes = async (req, res) => {
                     id: item.id,
                     type: item.tipomueble,
                     description: item.descripcionprincipal,
+                    created: item.created_at,
                     evidencias: item.imagen ? [{
                         imagen: item.imagen,
                         descripcion: item.descripcion_evidencia
