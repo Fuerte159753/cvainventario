@@ -23,7 +23,7 @@ module.exports.addMueble = async (req, res) => {
         connection = await db.getConnection();
         await connection.beginTransaction();
         
-        const { idmueble, type, description, evidences } = req.body;
+        const { idmueble, type, numentrega, description, evidences } = req.body;
         
         // 1. Validar datos de entrada
         if (!idmueble || !type || !numentrega || !description || !evidences || !Array.isArray(evidences)) {
@@ -33,7 +33,7 @@ module.exports.addMueble = async (req, res) => {
         // 2. Insertar el mueble principal usando el idmueble proporcionado
         await connection.query(
             'INSERT INTO muebles (id, tipomueble, numero_de_entrega, descripcionprincipal) VALUES (?, ?, ?, ?)',
-            [idmueble, type, description]
+            [idmueble, type, numentrega, description]
         );
         
         // 3. Procesar cada evidencia usando el mismo idmueble

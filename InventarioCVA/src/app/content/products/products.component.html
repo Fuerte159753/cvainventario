@@ -56,7 +56,7 @@
       <tbody class="divide-y divide-gray-100">
         <tr *ngFor="let item of furnitureItems" class="hover:bg-blue-50/50 transition-colors">
           <td class="p-4 font-medium text-gray-800">{{item.id}}</td>
-          <td class="p-4 font-medium text-gray-800">{{item.numentrega}}</td>
+          <td class="p-4 font-medium text-gray-800">#{{item.numentrega}}</td>
           <td class="p-4">
             <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
               {{item.type}}
@@ -98,6 +98,7 @@
         <div class="text-left">
           <p class="font-medium text-gray-800">{{item.type}}</p>
           <p class="text-xs text-gray-500 mt-1">{{item.created | date:'yyyy-MM-dd'}}</p>
+          <p class="text-xs text-gray-500 mt-1">#{{item.numentrega}}</p>
         </div>
       </div>
       <svg 
@@ -186,7 +187,7 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Numero de entrega</label>
             <input 
-              type="text"
+              type="number"
               formControlName="numentrega"
               class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all"
               placeholder="Ej. #####"

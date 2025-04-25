@@ -22,8 +22,8 @@ export class ProductsComponent {
   imageSelected = false;
   maxEvidences = 5;
   furnitureItems: any[] = [];
-  baseUrl='http://192.168.15.93:3000';
-  //baseUrl = 'http://localhost:3000';
+  //baseUrl='http://192.168.15.93:3000';
+  baseUrl = 'http://localhost:3000';
   //baseUrl = 'https://cvainventario.onrender.com';
     isModalOpenima = false;
     selectedEvidence: any = null;
@@ -289,6 +289,7 @@ export class ProductsComponent {
       const furnitureData = {
         idmueble: this.nextId,
         type: this.agregarmueble.value.type,
+        numentrega: this.agregarmueble.value.numentrega,
         description: this.agregarmueble.value.description,
         evidences: this.agregarmueble.value.evidences.map((evidence: any, index: number) => {
           const filename = `${timestamp}_${this.nextId}_${index + 1}_de_${this.agregarmueble.value.evidences.length}.jpg`;
