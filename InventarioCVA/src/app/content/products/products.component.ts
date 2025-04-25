@@ -23,8 +23,8 @@ export class ProductsComponent {
   maxEvidences = 5;
   furnitureItems: any[] = [];
   //baseUrl='http://192.168.15.93:3000';
-  baseUrl = 'http://localhost:3000';
-  //baseUrl = 'https://cvainventario.onrender.com';
+  //baseUrl = 'http://localhost:3000';
+  baseUrl = 'https://cvainventario.onrender.com';
     isModalOpenima = false;
     selectedEvidence: any = null;
     currentImageIndex = 0;
