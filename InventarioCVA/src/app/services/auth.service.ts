@@ -8,8 +8,11 @@ import { Observable } from 'rxjs';
 export class AuthService {
   //private apiUrl = 'http://localhost:3000/api';
   private apiUrl = 'https://cvainventario.onrender.com/api';
+  //private apiUrl = 'http://192.168.15.93:3000/api'; 
+
   //private apiUrluserlog = 'http://localhost:3000/user';
   private apiUrluserlog = 'https://cvainventario.onrender.com/user';
+  //private apiUrluserlog = 'http://192.168.15.93:3000/user';
 
   constructor(private http: HttpClient) {}
   login(email: string, password: string): Observable<any> {

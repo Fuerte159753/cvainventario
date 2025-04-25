@@ -11,11 +11,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["sweetalert2"],
             "outputPath": "dist/inventario-cva",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -23,11 +24,16 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
-              }
+                "input": "public",
+                "output": "/assets/"
+              },
+              "src/favicon.ico",
+              "src/manifest.webmanifest"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/notyf.min.css"
+
             ],
             "scripts": []
           },
@@ -45,12 +51,19 @@
                   "maximumError": "4kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json",
+              "optimization": true,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "baseHref": "/"
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "serviceWorker": false
             }
           },
           "defaultConfiguration": "production"
@@ -59,16 +72,21 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "InventarioCVA:build:production"
+              "buildTarget": "InventarioCVA:build:production",
+              "browserTarget": "InventarioCVA:build:production"
             },
             "development": {
-              "buildTarget": "InventarioCVA:build:development"
+              "buildTarget": "InventarioCVA:build:development",
+              "browserTarget": "InventarioCVA:build:development"
             }
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n"
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "InventarioCVA:build"
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -81,11 +99,13 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "/assets/"
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/notyf.min.css"
             ],
             "scripts": []
           }

@@ -5,7 +5,6 @@ import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
 import Swal from 'sweetalert2';
 import { Notyf } from 'notyf';
-import 'notyf/notyf.min.css';
 
 @Component({
   selector: 'app-proveedores',

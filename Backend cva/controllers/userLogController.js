@@ -26,13 +26,13 @@ module.exports.addMueble = async (req, res) => {
         const { idmueble, type, description, evidences } = req.body;
         
         // 1. Validar datos de entrada
-        if (!idmueble || !type || !description || !evidences || !Array.isArray(evidences)) {
+        if (!idmueble || !type || !numentrega || !description || !evidences || !Array.isArray(evidences)) {
             throw new Error('Datos de entrada inválidos');
         }
 
         // 2. Insertar el mueble principal usando el idmueble proporcionado
         await connection.query(
-            'INSERT INTO muebles (id, tipomueble, descripcionprincipal) VALUES (?, ?, ?)',
+            'INSERT INTO muebles (id, tipomueble, numero_de_entrega, descripcionprincipal) VALUES (?, ?, ?, ?)',
             [idmueble, type, description]
         );
         
@@ -112,7 +112,7 @@ module.exports.getMueblesConImagenes = async (req, res) => {
         
         // Obtener todos los muebles con sus imágenes relacionadas
         const [muebles] = await connection.query(`
-            SELECT m.id, m.tipomueble, m.descripcionprincipal, 
+            SELECT m.id, m.tipomueble, m.numero_de_entrega, m.descripcionprincipal, m.created_at, 
                    r.imagen, r.descripcion as descripcion_evidencia
             FROM muebles m
             LEFT JOIN recursos r ON m.id = r.id_mueble
@@ -133,7 +133,9 @@ module.exports.getMueblesConImagenes = async (req, res) => {
                 const nuevoMueble = {
                     id: item.id,
                     type: item.tipomueble,
+                    numentrega: item.numero_de_entrega,
                     description: item.descripcionprincipal,
+                    created: item.created_at,
                     evidencias: item.imagen ? [{
                         imagen: item.imagen,
                         descripcion: item.descripcion_evidencia

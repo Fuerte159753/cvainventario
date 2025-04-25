@@ -4,11 +4,13 @@ import { FormsModule, ReactiveFormsModule,FormArray, FormBuilder, FormGroup, Val
 import { AuthService } from '../../services/auth.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, ReactiveFormsModule, FormsModule],
+  imports: [NgFor, NgIf, ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
@@ -20,8 +22,9 @@ export class ProductsComponent {
   imageSelected = false;
   maxEvidences = 5;
   furnitureItems: any[] = [];
+  baseUrl='http://192.168.15.93:3000';
   //baseUrl = 'http://localhost:3000';
-  baseUrl = 'https://cvainventario.onrender.com';
+  //baseUrl = 'https://cvainventario.onrender.com';
     isModalOpenima = false;
     selectedEvidence: any = null;
     currentImageIndex = 0;
@@ -37,8 +40,9 @@ export class ProductsComponent {
   constructor(private fb: FormBuilder, private service:AuthService) {
     this.agregarmueble = this.fb.group({
       type: ['', Validators.required],
+      numentrega: ['', Validators.required],
       description: ['', Validators.required],
-      evidences: this.fb.array([this.createEvidence()]) // Empieza con 1 evidencia
+      evidences: this.fb.array([this.createEvidence()])
     });
     this.searchForm = this.fb.group({
       searchTerm: [''],
