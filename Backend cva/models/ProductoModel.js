@@ -5,7 +5,7 @@ class Producto {
     const [result] = await db.execute(
       `INSERT INTO productos 
        (nombre, tipo, descripcion, codigo_barras, cantidad, precio_unitario, proveedor_id, fecha_llegada) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [nombre, tipo, descripcion, codigo_barras, cantidad, precio_unitario, proveedor_id, fecha_llegada]
     );
     return this.getById(result.insertId);
