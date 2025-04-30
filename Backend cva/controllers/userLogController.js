@@ -156,6 +156,145 @@ module.exports.getMueblesConImagenes = async (req, res) => {
         if (connection) connection.release();
     }
 };
+module.exports.updateMueble = async (req, res) => {
+    let connection;
+    try {
+        connection = await db.getConnection();
+        await connection.beginTransaction();
+
+        const { id } = req.params;
+        const { type, numentrega, descripcion } = req.body;
+
+        // 1. Validar datos de entrada
+        if (!type || !numentrega || !descripcion) {
+            throw new Error('Datos de entrada inválidos');
+        }
+
+        // 2. Actualizar el mueble principal
+        await connection.query(
+            'UPDATE muebles SET tipomueble = ?, numero_de_entrega = ?, descripcionprincipal = ? WHERE id = ?',
+            [type, numentrega, descripcion, id]
+        );
+
+        // 3. Obtener las evidencias existentes para este mueble
+        /*const [evidencias] = await connection.query(
+            'SELECT id FROM recursos WHERE id_mueble = ? ORDER BY id',
+            [id]
+        );*/
+
+        // 4. Actualizar las descripciones de las evidencias
+        /*for (let i = 0; i < evidenceDescriptions.length; i++) {
+            if (evidencias[i]) {
+                await connection.query(
+                    'UPDATE recursos SET descripcion = ? WHERE id = ? AND id_mueble = ?',
+                    [evidenceDescriptions[i], evidencias[i].id, id]
+                );
+            }
+        }*/
+
+        await connection.commit();
+        res.status(200).json({
+            success: true,
+            message: 'Mueble actualizado correctamente'
+        });
+
+    } catch (error) {
+        console.error('Error al actualizar mueble:', error);
+        
+        if (connection) {
+            try {
+                await connection.rollback();
+            } catch (rollbackError) {
+                console.error('Error en rollback:', rollbackError);
+            }
+        }
+        
+        res.status(500).json({ 
+            success: false,
+            error: 'Error al actualizar el mueble',
+            details: error.message
+        });
+    } finally {
+        if (connection) {
+            try {
+                connection.release();
+            } catch (releaseError) {
+                console.error('Error liberando conexión:', releaseError);
+            }
+        }
+    }
+};
+module.exports.deleteMueble = async (req, res) => {
+    let connection;
+    try {
+        connection = await db.getConnection();
+        await connection.beginTransaction();
+
+        const { id } = req.params;
+
+        // 1. Obtener las rutas de las imágenes para eliminarlas del sistema de archivos
+        const [evidencias] = await connection.query(
+            'SELECT imagen FROM recursos WHERE id_mueble = ?',
+            [id]
+        );
+
+        // 2. Eliminar las evidencias (recursos) asociadas
+        await connection.query(
+            'DELETE FROM recursos WHERE id_mueble = ?',
+            [id]
+        );
+
+        // 3. Eliminar el mueble principal
+        await connection.query(
+            'DELETE FROM muebles WHERE id = ?',
+            [id]
+        );
+
+        // 4. Eliminar los archivos físicos de las evidencias
+        for (const evidencia of evidencias) {
+            if (evidencia.imagen) {
+                try {
+                    const filePath = path.join(__dirname, '..', evidencia.imagen);
+                    await fs.unlink(filePath);
+                } catch (unlinkError) {
+                    console.error('Error eliminando archivo:', unlinkError);
+                    // No detenemos el proceso si falla la eliminación de un archivo
+                }
+            }
+        }
+
+        await connection.commit();
+        res.status(200).json({
+            success: true,
+            message: 'Mueble eliminado correctamente'
+        });
+
+    } catch (error) {
+        console.error('Error al eliminar mueble:', error);
+        
+        if (connection) {
+            try {
+                await connection.rollback();
+            } catch (rollbackError) {
+                console.error('Error en rollback:', rollbackError);
+            }
+        }
+        
+        res.status(500).json({ 
+            success: false,
+            error: 'Error al eliminar el mueble',
+            details: error.message
+        });
+    } finally {
+        if (connection) {
+            try {
+                connection.release();
+            } catch (releaseError) {
+                console.error('Error liberando conexión:', releaseError);
+            }
+        }
+    }
+};
 
 // Operaciones CRUD para clientes
 module.exports.createClient = async (req, res) => {

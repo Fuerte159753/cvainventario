@@ -100,7 +100,7 @@
               {
                 "glob": "**/*",
                 "input": "public",
-                "output": "/assets/"
+                "output": "/"
               }
             ],
             "styles": [

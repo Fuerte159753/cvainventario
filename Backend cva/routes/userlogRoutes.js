@@ -8,6 +8,8 @@ const jsonParser = express.json({ limit: '50mb' });
 router.post('/addFurniture', jsonParser, userlogcontroller.addMueble);
 router.get('/Nextid', userlogcontroller.getNextMuebleId);
 router.get('/muebles', userlogcontroller.getMueblesConImagenes);
+router.put('/updateFurniture/:id', jsonParser, userlogcontroller.updateMueble);
+router.delete('/deleteFurniture/:id', userlogcontroller.deleteMueble);
 //router.post('/addFurniture', userlogcontroller.addMueble);
 
 router.post('/clients', jsonParser, userlogcontroller.createClient);

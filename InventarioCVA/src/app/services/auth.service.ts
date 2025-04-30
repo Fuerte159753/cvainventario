@@ -6,12 +6,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  //private apiUrl = 'http://localhost:3000/api';
-  private apiUrl = 'https://cvainventario.onrender.com/api';
+  private apiUrl = 'http://localhost:3000/api';
+  //private apiUrl = 'https://cvainventario.onrender.com/api';
   //private apiUrl = 'http://192.168.15.93:3000/api'; 
 
-  //private apiUrluserlog = 'http://localhost:3000/user';
-  private apiUrluserlog = 'https://cvainventario.onrender.com/user';
+  private apiUrluserlog = 'http://localhost:3000/user';
+  //private apiUrluserlog = 'https://cvainventario.onrender.com/user';
   //private apiUrluserlog = 'http://192.168.15.93:3000/user';
 
   constructor(private http: HttpClient) {}
@@ -104,5 +104,11 @@ updatePassword(userId: string, currentPassword: string, newPassword: string) {
     currentPassword,
     newPassword
   });
+}
+updateFurniture(id: number, data: any): Observable<any> {
+  return this.http.put(`${this.apiUrluserlog}/updateFurniture/${id}`, data);
+}
+deleteFurniture(id: number): Observable<any> {
+  return this.http.delete(`${this.apiUrluserlog}/deleteFurniture/${id}`);
 }
 }

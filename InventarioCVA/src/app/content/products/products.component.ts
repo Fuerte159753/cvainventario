@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule,FormArray, FormBuilder, FormGroup, Val
 import { AuthService } from '../../services/auth.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 
 
@@ -23,14 +24,17 @@ export class ProductsComponent {
   maxEvidences = 5;
   furnitureItems: any[] = [];
   //baseUrl='http://192.168.15.93:3000';
-  //baseUrl = 'http://localhost:3000';
-  baseUrl = 'https://cvainventario.onrender.com';
+  baseUrl = 'http://localhost:3000';
+  //baseUrl = 'https://cvainventario.onrender.com';
     isModalOpenima = false;
     selectedEvidence: any = null;
     currentImageIndex = 0;
   searchForm: FormGroup;
   originalFurnitureItems: any[] = [];
   searchTerm$ = new Subject<string>();
+  isEditModalOpen = false;
+  editForm: FormGroup;
+ currentEditingId: number | null = null;
 
 
   videoStream: MediaStream | null = null;
@@ -47,6 +51,13 @@ export class ProductsComponent {
     this.searchForm = this.fb.group({
       searchTerm: [''],
       searchType: ['all']
+    });
+    // En el constructor
+    this.editForm = this.fb.group({
+      type: ['', Validators.required],
+      numentrega: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      evidenceDescriptions: this.fb.array([]) // Solo para las descripciones
     });
   }
   ngOnInit(): void {
@@ -383,4 +394,102 @@ export class ProductsComponent {
     onSearchChange(): void {
       this.searchTerm$.next(this.searchForm.get('searchTerm')?.value);
     }
+    currentItem: any;
+    openEditModal(item: any): void {
+      this.currentEditingId = item.id;
+      this.currentItem = item; // Guarda el item completo para mostrar imágenes
+      
+      // Precargar los datos básicos
+      this.editForm.patchValue({
+        type: item.type,
+        numentrega: item.numentrega,
+        descripcion: item.description
+      });
+      
+      // Limpiar y cargar las descripciones CORRECTAMENTE
+      /*const descArray = this.editForm.get('evidenceDescriptions') as FormArray;
+      descArray.clear();
+      
+      item.evidencias.forEach((evidencia: any) => {
+        descArray.push(this.fb.group({
+          descripcion: [evidencia.descripcion || '']
+        }));
+      });*/
+      this.isEditModalOpen = true;
+    }
+// Cerrar modal de edición
+closeEditModal(): void {
+  this.isEditModalOpen = false;
+  this.currentEditingId = null;
+}
+
+saveEditedFurniture(): void {
+  if (this.editForm.invalid || !this.currentEditingId) return;
+  // Preparar datos para enviar
+  const formData = {
+    type: this.editForm.value.type,
+    numentrega: this.editForm.value.numentrega,
+    descripcion: this.editForm.value.descripcion
+    //evidenceDescriptions: this.editForm.value.evidenceDescriptions
+  };
+  
+  this.service.updateFurniture(this.currentEditingId, formData).subscribe({
+    next: (response) => {
+      this.closeEditModal();
+      this.loadFurniture(); // Recargar la lista
+    },
+    error: (err) => {
+      console.error(err);
+    }
+  });
+}
+confirmDelete(id: number): void {
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: "¡No podrás revertir esta acción!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    backdrop: `
+      rgba(0,0,0,0.7)
+      url("/assets/images/trash-icon.png")
+      center top
+      no-repeat
+    `
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.deleteFurniture(id);
+    }
+  });
+}
+
+deleteFurniture(id: number): void {
+  this.service.deleteFurniture(id).subscribe({
+    next: () => {
+      Swal.fire({
+        title: '¡Eliminado!',
+        text: 'El mueble ha sido eliminado correctamente.',
+        icon: 'success',
+        confirmButtonColor: '#3085d6',
+        timer: 2000,
+        timerProgressBar: true
+      });
+      // Recargar la lista de muebles
+      this.loadFurniture();
+    },
+    error: (err) => {
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudo eliminar el mueble: ' + (err.error?.message || 'Error desconocido'),
+        icon: 'error',
+        confirmButtonColor: '#3085d6'
+      });
+      console.error(err);
+    }
+  });
+}
+
 }

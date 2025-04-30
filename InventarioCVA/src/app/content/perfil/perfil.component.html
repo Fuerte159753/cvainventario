@@ -1,3 +1,14 @@
+<!-- Alertas (añade esto en la parte superior de tu template) -->
+<div *ngIf="showAlert" class="fixed top-4 right-4 z-50">
+  <div class="p-4 mb-4 text-sm rounded-lg shadow-lg" 
+       [ngClass]="{
+         'text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400': alertType === 'success',
+         'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400': alertType === 'error',
+         'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400': alertType === 'info'
+       }" role="alert">
+    <span class="font-medium">{{ alertTitle }}</span> {{ alertMessage }}
+  </div>
+</div>
 <div class="min-h-screen bg-gray-100">
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
       <!-- Encabezado -->
